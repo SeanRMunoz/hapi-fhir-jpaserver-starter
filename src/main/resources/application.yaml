@@ -145,6 +145,11 @@ spring:
 # -------------------------------------------------------------------------------------
 hapi:
   fhir:
+    security:
+      clerk:
+        enabled: true
+        issuer: "https://intense-cougar-11.clerk.accounts.dev"
+        # audience: ["your-api-audience"]
 
     # -------------------------------------------------------------------------------
     # A. Core Server & API

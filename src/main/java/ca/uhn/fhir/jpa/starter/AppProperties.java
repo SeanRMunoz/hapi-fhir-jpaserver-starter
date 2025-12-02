@@ -97,6 +97,8 @@ public class AppProperties {
 	private Boolean validate_resource_status_for_package_upload = true;
 	private Boolean install_transitive_ig_dependencies = true;
 
+	private Security security = new Security();
+
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
 	private Map<String, ExtendedPackageInstallationSpec> implementationGuides = null;
 	private String custom_content_path = null;
@@ -845,6 +847,56 @@ public class AppProperties {
 	public void setStore_meta_source_information(
 			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
 		this.store_meta_source_information = store_meta_source_information;
+	}
+
+	public Security getSecurity() {
+		return security;
+	}
+
+	public void setSecurity(Security security) {
+		this.security = security;
+	}
+
+	public static class Security {
+		private Clerk clerk = new Clerk();
+
+		public Clerk getClerk() {
+			return clerk;
+		}
+
+		public void setClerk(Clerk clerk) {
+			this.clerk = clerk;
+		}
+
+		public static class Clerk {
+			private Boolean enabled = false;
+			private String issuer;
+			private List<String> audience = new ArrayList<>();
+
+			public Boolean getEnabled() {
+				return enabled != null ? enabled : false;
+			}
+
+			public void setEnabled(Boolean enabled) {
+				this.enabled = enabled;
+			}
+
+			public String getIssuer() {
+				return issuer;
+			}
+
+			public void setIssuer(String issuer) {
+				this.issuer = issuer;
+			}
+
+			public List<String> getAudience() {
+				return audience;
+			}
+
+			public void setAudience(List<String> audience) {
+				this.audience = audience;
+			}
+		}
 	}
 
 	public static class Cors {

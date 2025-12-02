@@ -52,6 +52,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
+import ca.uhn.fhir.jpa.starter.security.ClerkAuthenticationInterceptor;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -111,6 +112,12 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
 @Import(ThreadPoolFactoryConfig.class)
 public class StarterJpaConfig {
+
+	@Bean
+	@ConditionalOnProperty(prefix = "hapi.fhir.security.clerk", name = "enabled", havingValue = "true")
+	public ClerkAuthenticationInterceptor clerkAuthenticationInterceptor(AppProperties appProperties) {
+		return new ClerkAuthenticationInterceptor(appProperties);
+	}
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
 
@@ -334,7 +341,8 @@ public class StarterJpaConfig {
 			ApplicationContext appContext,
 			Optional<IpsOperationProvider> theIpsOperationProvider,
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
-			DiffProvider diffProvider) {
+			DiffProvider diffProvider,
+			Optional<ClerkAuthenticationInterceptor> clerkAuthenticationInterceptorOpt) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -396,6 +404,9 @@ public class StarterJpaConfig {
 		}
 
 		fhirServer.registerInterceptor(loggingInterceptor);
+
+		// Register Clerk Authentication Interceptor if configured
+		clerkAuthenticationInterceptorOpt.ifPresent(fhirServer::registerInterceptor);
 
 		implementationGuideOperationProvider.ifPresent(fhirServer::registerProvider);
 
