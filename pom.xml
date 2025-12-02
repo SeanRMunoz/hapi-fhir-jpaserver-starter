@@ -59,7 +59,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Clerk JWT verification -->
+        <!-- JWT verification for API endpoint security -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
@@ -69,12 +69,6 @@
             <groupId>com.auth0</groupId>
             <artifactId>jwks-rsa</artifactId>
             <version>0.22.1</version>
-        </dependency>
-        <!-- Clerk Backend API (as requested; not strictly needed for JWT verification) -->
-        <dependency>
-            <groupId>com.clerk</groupId>
-            <artifactId>backend-api</artifactId>
-            <version>3.2.0</version>
         </dependency>
 
         <dependency>
