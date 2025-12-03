@@ -9,8 +9,8 @@ export default clerkMiddleware(async (auth, req) => {
 
   if (isDashboard) {
     const { getToken } = await auth();
-    const jwt_template = 'jwt-long-life';
-    const token = await getToken({ jwt_template }); // Get JWT token using a custom JWT template for longer expiration
+    const template = 'jwt-long-life';
+    const token = await getToken({ template }); // Get JWT token using a custom JWT template for longer expiration
 
     if (token) {
       res.cookies.set('Authorization', token, {
