@@ -83,14 +83,12 @@ public class ClerkAuthenticationInterceptor {
 			verification.withAnyOfAudience(audiences.toArray(new String[0]));
 		}
 
-		// Enforce presence of standard Clerk claims: azp, exp, iat, iss, nbf, sid, sub
+		// Enforce the presence of Clerk's default claims
 		verification
-			.withClaimPresence("azp")
 			.withClaimPresence("exp")
 			.withClaimPresence("iat")
 			.withClaimPresence("iss")
 			.withClaimPresence("nbf")
-			.withClaimPresence("sid")
 			.withClaimPresence("sub");
 		this.verifier = verification.build();
 	}
@@ -146,6 +144,7 @@ public class ClerkAuthenticationInterceptor {
 
 	private AuthenticationException unauthorized(String message) {
 		AuthenticationException ex = new AuthenticationException(message);
+		ex.addAuthenticateHeaderForRealm("MyRealm");
 		return ex;
 	}
 }

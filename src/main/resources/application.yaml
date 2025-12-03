@@ -149,7 +149,7 @@ hapi:
       clerk:
         enabled: true
         issuer: "https://intense-cougar-11.clerk.accounts.dev"
-        # audience: ["your-api-audience"]
+        audience: ["http://localhost:8080/fhir"]
 
     # -------------------------------------------------------------------------------
     # A. Core Server & API
