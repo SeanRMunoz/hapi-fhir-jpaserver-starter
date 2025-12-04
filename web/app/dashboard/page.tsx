@@ -1,5 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
 import Link from "next/link";
+import CopyToClipboardButton from "../../components/CopyToClipboardButton";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -17,6 +19,10 @@ export default async function DashboardPage() {
     );
   }
 
+  // In Next.js App Router, cookies() should be awaited before accessing values.
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("Authorization")?.value;
+
   return (
     <main>
       <header className="nav">
@@ -25,7 +31,24 @@ export default async function DashboardPage() {
       <section className="card">
         <h1>Dashboard</h1>
         <p>Welcome, {user.firstName ?? user.username ?? user.emailAddresses[0]?.emailAddress ?? "user"}!</p>
-        <p>Your user ID is <code>{user.id}</code>.</p>
+        <p>Your user ID is: <code>{user.id}</code></p>
+        {authCookie && (
+          <div>
+            <label htmlFor="authCookie">Authorization cookie:</label>
+            <div>
+              <input
+                id="authCookie"
+                type="text"
+                readOnly
+                value={authCookie}
+                style={{ width: "100%", fontFamily: "monospace" }}
+              />
+              <div style={{ marginTop: "0.5rem" }}>
+                <CopyToClipboardButton text={authCookie} label="Copy cookie" className="btn" />
+              </div>
+            </div>
+          </div>
+        )}
         <p>
           <Link className="btn" href="/">Back home</Link>
         </p>
