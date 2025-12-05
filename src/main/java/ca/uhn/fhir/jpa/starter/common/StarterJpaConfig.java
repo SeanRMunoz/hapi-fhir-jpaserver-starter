@@ -53,6 +53,7 @@ import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationIntercepto
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.security.ClerkAuthenticationInterceptor;
+import ca.uhn.fhir.jpa.starter.security.StarterAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -117,6 +118,12 @@ public class StarterJpaConfig {
 	@ConditionalOnProperty(prefix = "hapi.fhir.security.clerk", name = "enabled", havingValue = "true")
 	public ClerkAuthenticationInterceptor clerkAuthenticationInterceptor(AppProperties appProperties) {
 		return new ClerkAuthenticationInterceptor(appProperties);
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "hapi.fhir.security.authorization", name = "enabled", havingValue = "true")
+	public StarterAuthorizationInterceptor starterAuthorizationInterceptor(AppProperties appProperties) {
+		return new StarterAuthorizationInterceptor(appProperties);
 	}
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
@@ -342,7 +349,8 @@ public class StarterJpaConfig {
 			Optional<IpsOperationProvider> theIpsOperationProvider,
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider,
-			Optional<ClerkAuthenticationInterceptor> clerkAuthenticationInterceptorOpt) {
+			Optional<ClerkAuthenticationInterceptor> clerkAuthenticationInterceptorOpt,
+			Optional<StarterAuthorizationInterceptor> starterAuthorizationInterceptorOpt) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -407,6 +415,9 @@ public class StarterJpaConfig {
 
 		// Register Clerk Authentication Interceptor if configured
 		clerkAuthenticationInterceptorOpt.ifPresent(fhirServer::registerInterceptor);
+
+		// Register Authorization Interceptor if configured
+		starterAuthorizationInterceptorOpt.ifPresent(fhirServer::registerInterceptor);
 
 		implementationGuideOperationProvider.ifPresent(fhirServer::registerProvider);
 

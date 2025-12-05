@@ -859,6 +859,7 @@ public class AppProperties {
 
 	public static class Security {
 		private Clerk clerk = new Clerk();
+		private Authorization authorization = new Authorization();
 
 		public Clerk getClerk() {
 			return clerk;
@@ -868,6 +869,14 @@ public class AppProperties {
 			this.clerk = clerk;
 		}
 
+		public Authorization getAuthorization() {
+			return authorization;
+		}
+		
+		public void setAuthorization(Authorization authorization) {
+			this.authorization = authorization;
+		}
+		
 		public static class Clerk {
 			private Boolean enabled = false;
 			private String issuer;
@@ -895,6 +904,27 @@ public class AppProperties {
 
 			public void setAudience(List<String> audience) {
 				this.audience = audience;
+			}
+		}
+		
+		public static class Authorization {
+			private Boolean enabled = false;
+			private List<String> admin_users = new ArrayList<>();
+
+			public Boolean getEnabled() {
+				return enabled != null ? enabled : false;
+			}
+			
+			public void setEnabled(Boolean enabled) {
+				this.enabled = enabled;
+			}
+
+			public List<String> getAdmin_users() {
+				return admin_users;
+			}
+
+			public void setAdmin_users(List<String> admin_users) {
+				this.admin_users = admin_users;
 			}
 		}
 	}

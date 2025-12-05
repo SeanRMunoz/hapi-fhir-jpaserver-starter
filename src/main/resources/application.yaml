@@ -145,11 +145,18 @@ spring:
 # -------------------------------------------------------------------------------------
 hapi:
   fhir:
+
+    # -------------------------------------------------------------------------------
+    # Example Security implementation of Authentication (AuthN) and Authorization (AuthZ)
+    # -------------------------------------------------------------------------------
     security:
       clerk:
-        enabled: true
+        enabled: true  # See implementation class: ClerkAuthenticationInterceptor
         issuer: "https://intense-cougar-11.clerk.accounts.dev"
         audience: ["http://localhost:8080/fhir"]
+      authorization:
+        enabled: true  # See implementation class: StarterAuthorizationInterceptor
+        admin_users: ["user_36OtvBe8VvCkbocyQ41VcLiAW2N"]  # User IDs that can perform ALL operations, otherwise only READ allowed by default
 
     # -------------------------------------------------------------------------------
     # A. Core Server & API
