@@ -49,8 +49,9 @@ export default async function DashboardPage() {
             </div>
           </div>
         )}
-        <p>
+        <p style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           <Link className="btn" href="/">Back home</Link>
+          <Link className="btn" href="/patient-query">Patient Query</Link>
         </p>
       </section>
     </main>

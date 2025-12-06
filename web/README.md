@@ -34,8 +34,17 @@ This is a minimal Next.js App Router (TypeScript) frontend that uses Clerk for a
 - `/sign-in` Clerk Sign In
 - `/sign-up` Clerk Sign Up
 - `/dashboard` Protected page (requires auth)
+- `/patient-query` Patient Query UI (posts prompts to an n8n agent)
 
-Middleware protects all non-public routes. Public routes are declared in `middleware.ts`.
+## Patient Query setup
+1. Configure the n8n agent endpoint in `.env.local`:
+   ```
+   N8N_AGENT_URL=http://localhost:5678/webhook/patient-agent
+   ```
+2. Start the dev server and open http://localhost:3000/patient-query
+3. Enter a prompt. The frontend calls `POST /api/patient-query`, which forwards `{ prompt }` to `N8N_AGENT_URL`.
+   - If signed in, the app will forward the `Authorization` cookie as `Bearer <token>` to the n8n endpoint.
+   - Agent responses may include Markdown. The UI renders Markdown (GitHub Flavored Markdown via `react-markdown` + `remark-gfm`). Raw HTML in responses is not executed.
 
 ## Notes
 - This frontend is currently standalone and not wired to the Java backend. Add API calls/fetchers as needed.
