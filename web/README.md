@@ -41,8 +41,15 @@ This is a minimal Next.js App Router (TypeScript) frontend that uses Clerk for a
    ```
    N8N_AGENT_URL=http://localhost:5678/webhook/patient-agent
    ```
-2. Start the dev server and open http://localhost:3000/patient-query
-3. Enter a prompt. The frontend calls `POST /api/patient-query`, which forwards `{ prompt }` to `N8N_AGENT_URL`.
+2. Start n8n with Docker and open the agent workflow: http://localhost:5678/home/workflows
+   ```bash
+   docker volume create n8n_data
+   ```
+   ```bash
+   docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n n8nio/n8n
+   ```
+3. Start the dev server and open http://localhost:3000/patient-query
+4. Enter a prompt. The frontend calls `POST /api/patient-query`, which forwards `{ prompt }` to `N8N_AGENT_URL`.
    - If signed in, the app will forward the `Authorization` cookie as `Bearer <token>` to the n8n endpoint.
    - Agent responses may include Markdown. The UI renders Markdown (GitHub Flavored Markdown via `react-markdown` + `remark-gfm`). Raw HTML in responses is not executed.
 
