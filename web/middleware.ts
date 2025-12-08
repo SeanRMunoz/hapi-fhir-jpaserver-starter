@@ -1,8 +1,18 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+
+const isProtectedRoute = createRouteMatcher([
+  '/patient-query(.*)',
+  ]);
 
 // Enhance Clerk middleware to also manage the Authorization cookie for /dashboard
 export default clerkMiddleware(async (auth, req) => {
+
+  // Redirects to sign-in if not authenticated
+  if (isProtectedRoute(req)) {
+    await auth.protect();
+  }
+
   const res = NextResponse.next();
   const AUTH_COOKIE_NAME = 'Authorization';
   const { getToken, userId } = await auth();
